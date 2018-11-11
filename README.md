@@ -14,18 +14,25 @@ The score will be the mile distance between the new login IP and the closest IP 
 If the closest previous IP was marked as FRAUD, you should double the score before returning your final answer. 
 
 ### Requirements
-* Python PIP package
 * API access to IPinfo.io with access token generated 
 * Python libraries required:
   * Numpy
   * ipinfo
 
 ### Guide on how-to build the project
-* 
+Run this on terminal:
+* python Fraud_ip_detection.py --filepath=<file that conatins the lsit of IP's> --acessToken=<access token to access IPinfo.io>
 
 ### Follow Up Questions
-#### 1.What circumstances may lead to false positives or false negatives when using solely this score? 
+#### 1.What circumstances may lead to false positives or false negatives when using solely this score?
+* The current assumption is that higher the score, higher the probability that it is a fraudulant IP. According to this statement "If the closest previous IP was marked as FRAUD, you should double the score before returning your final answer" we blindly consider any IP closer to a fraudulant IP is also fraudulant. This assumption should be backed up by various other factors(other than latitude/longitude), else would lead to false positives or false negatives.
+* If there is an oulier IP, far from any known IP locations, then it's distance to the nearest IP is not a good factor to measure if it's fraudulant or not.
 
 #### 2.What challenges are there with computing distances based on latitude/longitude? 
+As the number of new users's increases computing distances will linearly increase the time complexity. Hence, we should impart some sort of filtering algorithm to reduce the number of distance calculations.
 
 ### Further Considerations
+* Fetching IP details like coordinates for a list of IPs using IPinfo.io python API is currently not supported. Hence, building a solution to fetch this information at once would save us a lot of time.
+* Caching the IP information would also reduce the execution time. 
+* Saving the fetched IP information into a local database would save us IPinfo.io API calls. This will be an efficient way of managing the IP details.
+* Currently I have used Euclidean distance to calculate distance between 2 coordinates. But, providing an option of various distance functions would be another improvement.
